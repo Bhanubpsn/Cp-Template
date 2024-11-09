@@ -1,0 +1,130 @@
+// Author : Bhanu Negi
+#include <bits/stdc++.h>
+#define Code ios_base::sync_with_stdio(0);
+#define by cin.tie(0);
+#define Bhanu cout.tie(0);
+#define ll long long
+#define pii pair<int,int>
+#define PQ priority_queue<ll>
+#define PQG priority_queue<ll,vector<ll>,greater<ll>>
+#define pll pair<long long,long long>
+#define F first
+#define S second
+#define pb push_back
+#define mod 1000000007
+#define inf 100000000000000000
+using namespace std;
+
+int dx[4] = {+1,-1,0,0};
+int dy[4] = {0,0,+1,-1};
+ 
+int _dx[8] = {+1,-1,0,0,+1,-1,+1,-1};
+int _dy[8] = {0,0,+1,-1,+1,-1,-1,+1};
+
+vector<pll> dxy = {{1,0},{-1,0},{0,1},{0,-1}};
+vector<pll> _dxy = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{1,-1},{-1,1}};
+
+class debug{
+public: 
+    template<class T>
+    void print(vector<T>& arr){
+        for(auto& it : arr) cout<<it<<" ";
+        cout<<endl;
+    }
+};
+
+// Matrix Exponentiation
+class Matrix{
+public:
+    vector<vector<ll>> mat;
+    void multiply(vector<vector<ll>>& A,vector<vector<ll>>& B){
+        int n = A.size();
+        vector<vector<ll>> C(n, vector<ll>(n));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <n; j++) {
+                for (int k = 0; k < n; k++) {
+                    C[i][j] = (C[i][j] + ((A[i][k]) * (B[k][j]))%mod)%mod;
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                A[i][j] = C[i][j];
+            }
+        }
+    }
+    vector<vector<ll>> identity(int n){
+        vector<vector<ll>> ans(n,vector<ll>(n,0));
+        for(int i=0; i<n; i++) ans[i][i] = 1;
+        return ans;
+    }
+    vector<vector<ll>> exponentiate(vector<vector<ll>> M, ll expo){
+        int n = M.size();
+        vector<vector<ll>> ans = identity(n);
+        while (expo) {
+            if (expo & 1) multiply(ans, M);
+            multiply(M, M);
+            expo >>= 1;
+        }
+        return ans;
+    }
+
+};
+
+/*****************************************************************************************************/
+
+// Disjoint Set
+class Disjoint{
+public:
+    vector<ll> parent,size,rank;
+    Disjoint(int n){
+        parent.resize(n+1);
+        for(int i=0;i<=n; i++) parent[i] = i;
+        size.resize(n+1,1);
+        rank.resize(n+1,0);
+    }
+
+    int findUPar(int node){
+        if(parent[node] == node) return node;
+        return parent[node] = findUPar(parent[node]);
+    }
+
+    void union_by_rank(int u,int v){
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if(ulp_u == ulp_v) return;
+        if(rank[ulp_u] > rank[ulp_v]){
+            parent[ulp_v] =  ulp_u;
+        }
+        else if(rank[ulp_u] < rank[ulp_v]){
+            parent[ulp_u] = ulp_v;
+        }
+        else{
+            rank[ulp_u]++;
+            parent[ulp_v] = ulp_u;
+        }
+    }
+
+    void union_by_size(int u,int v){
+        int ulp_u = findUPar(u);
+        int ulp_v = findUPar(v);
+        if(ulp_u == ulp_v) return;
+        if(size[ulp_u] >= size[ulp_v]){
+            size[ulp_u] += size[ulp_v];
+            parent[ulp_v] = ulp_u;
+        }
+        else{
+            size[ulp_v] += size[ulp_u];
+            parent[ulp_u] = ulp_v;
+
+        }
+    }
+};
+
+/****************************************************************************************************/
+
+auto bpsn = [](){
+    Code by Bhanu
+    return 'sk';
+}();
+/************************************************************************************************** */
